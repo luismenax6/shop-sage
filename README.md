@@ -207,4 +207,4 @@ curl localhost:5001/health         # {"status":"ok","db":"up"}
 - [x] **Day 4** — Agent: RAG generation (Claude) + tool-calling (search/cart/ticket), `/chat` endpoint
 - [x] **Day 5** — Angular chat UI: messages, in-chat product cards, live mini-cart, citations, markdown
 - [x] **Day 6** — AWS infrastructure in Terraform (modules + dev env + `terraform test`), backend Dockerfile
-- [ ] **Day 7** — CI/CD, polish, demo
+- [x] **Day 7** — Polish: removed dead code, single Bedrock generation client, finalized docs

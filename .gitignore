@@ -35,3 +35,6 @@ crash.log
 .DS_Store
 .idea/
 .vscode/
+
+# --- Personal (not part of the project) ---
+linkedin-post.md

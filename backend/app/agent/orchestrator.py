@@ -10,13 +10,8 @@ The conversation `messages` list is returned so a multi-turn chat (e.g. ask ->
 user confirms -> execute) can continue across calls.
 """
 
-import boto3
-
 from app.agent.tools import TOOL_SPECS, WRITE_TOOLS, dispatch
-
-GEN_MODEL_ID = "us.anthropic.claude-sonnet-4-6"
-REGION = "us-east-1"
-_bedrock = boto3.client("bedrock-runtime", region_name=REGION)
+from app.bedrock.generation import GEN_MODEL_ID, client
 
 SYSTEM_PROMPT = (
     "You are ShopSage, a friendly shopping assistant for a gift store. "
@@ -47,7 +42,7 @@ def run_agent(conn, user_message, history=None, user_id="user_demo", confirm=Fal
     tool_calls = []
 
     for _ in range(max_turns):
-        resp = _bedrock.converse(
+        resp = client.converse(
             modelId=GEN_MODEL_ID,
             system=[{"text": SYSTEM_PROMPT}],
             messages=messages,
