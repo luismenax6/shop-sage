@@ -5,8 +5,8 @@ shoppers find the right product, answers support questions grounded in real
 policy documents (RAG), and takes actions on their behalf via tool-calling.
 
 > Portfolio project. A focused, mini take on a conversational commerce assistant
-> (in the spirit of Capacity.com) — **not** a full e-commerce storefront. The
-> core is the chat experience, retrieval-augmented answers, and agent actions.
+> — **not** a full e-commerce storefront. The core is the chat experience,
+> retrieval-augmented answers, and agent actions.
 
 ![ShopSage demo — chat, in-chat product cards, live cart](demo/shopsage-chat.gif)
 
