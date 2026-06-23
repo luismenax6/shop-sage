@@ -13,7 +13,8 @@ infra/
 │   ├── ecs/       # ECR, cluster, Fargate task + service, IAM roles, logs
 │   ├── rds/       # Postgres 16, subnet group, SG, password + DATABASE_URL secret
 │   ├── cdn/       # S3 + CloudFront (OAC) for the Angular frontend
-│   └── cognito/   # user pool + SPA client
+│   ├── cognito/   # user pool + SPA client
+│   └── ingestion/ # S3 docs -> SQS -> Lambda -> pgvector (event-driven ingestion)
 └── envs/dev/      # wires the modules; this is where you run terraform
     └── tests/     # terraform test (mocked providers, no AWS calls)
 ```
@@ -25,9 +26,11 @@ infra/
                   │  static Angular
    user ──────────┤
                   │  /chat, /cart, /health
-            ALB ──── ECS Fargate (backend) ──── RDS Postgres + pgvector
-                              │
-                          Bedrock (Titan + Claude)
+            ALB ──── ECS Fargate (backend) ───── RDS Postgres + pgvector
+                              │                          ▲
+                          Bedrock (Titan + Claude)       │ embeddings
+                                                         │
+   admin ─ upload ─ S3 (docs) ─ SQS ─ Lambda (chunk + embed)
 ```
 
 Notable choices:
@@ -39,6 +42,10 @@ Notable choices:
   env (not the ecs module) to avoid an ECS↔RDS dependency cycle.
 - IAM uses least privilege: the task role only gets `bedrock:InvokeModel`; the
   execution role only reads the one DB secret. No account IDs or ARNs hardcoded.
+- **Event-driven ingestion** runs on Lambda (no C extension needed there): an S3
+  `ObjectCreated` event goes to SQS, and the Lambda chunks + embeds into pgvector,
+  with a DLQ for failures. The Lambda needs a psycopg + pgvector layer
+  (`module.ingestion` `layers` variable).
 
 ## Usage
 
@@ -46,7 +53,7 @@ Notable choices:
 cd infra/envs/dev
 terraform init
 terraform plan      # review
-terraform apply     # creates real AWS resources (costs money)
+terraform apply     # provisions ~55 real AWS resources (costs money)
 ```
 
 State is local for now; for a team, switch to the S3 backend stub in

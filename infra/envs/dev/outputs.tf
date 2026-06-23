@@ -12,6 +12,11 @@ output "frontend_bucket" {
   value = module.cdn.bucket_name
 }
 
+output "cloudfront_distribution_id" {
+  description = "For cache invalidation after a frontend deploy."
+  value       = module.cdn.distribution_id
+}
+
 output "ecr_repository_url" {
   description = "Push the backend image here."
   value       = module.ecs.ecr_repository_url

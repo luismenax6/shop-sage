@@ -1,59 +1,41 @@
-# Frontend
+# ShopSage frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.16.
+Angular 21 (standalone components + signals) — the chat UI for the ShopSage
+assistant. A single conversational view with:
 
-## Development server
+- chat window with user/assistant bubbles and **markdown rendering**
+- **in-chat product cards** (image, price, stock, Add button)
+- a **live mini-cart** kept in sync from the backend
+- **citation chips** under support answers (source document + section)
 
-To start a local development server, run:
+## Develop
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The frontend talks to the Flask backend on `:5001`, so start that first
+(see the root [README](../README.md)). Then:
 
 ```bash
-ng generate component component-name
+npm install
+npm start            # ng serve on http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+A dev proxy (`proxy.conf.json`, wired in `angular.json`) forwards `/chat`,
+`/cart`, and `/health` to the backend, so there are no CORS issues in dev.
+
+## Build
 
 ```bash
-ng generate --help
+npm run build        # outputs to dist/frontend/browser/
 ```
 
-## Building
+Deployed as a static site to S3 + CloudFront (see [`infra/`](../infra)).
 
-To build the project run:
+## Structure
 
-```bash
-ng build
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+src/app/
+├── app.ts / app.html / app.scss   # the chat view
+├── chat.service.ts                # POST /chat, keeps conversation history
+├── cart.service.ts                # GET /cart, POST /cart/add
+├── chat.models.ts                 # response/message types
+└── markdown.pipe.ts               # renders assistant markdown (marked)
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

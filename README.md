@@ -28,13 +28,13 @@ policy documents (RAG), and takes actions on their behalf via tool-calling.
 
 | Layer | Tech |
 | --- | --- |
-| Frontend | Angular (chat UI with streaming, in-chat product cards, mini-cart, citations) |
+| Frontend | Angular (chat UI, in-chat product cards, mini-cart, citations, markdown) |
 | Backend | Flask (Python), app-factory pattern |
 | Retrieval acceleration | **C extension** called from Python for cosine similarity |
 | LLM & embeddings | AWS Bedrock — Claude (generation) + Amazon Titan Text v2 (embeddings, 1024-dim) |
 | Vector + relational store | PostgreSQL 16 + **pgvector** (catalog, orders, tickets, cart, embeddings) |
-| Agent actions | Tool-calling: `search_products` (read), `add_to_cart` (write), `create_ticket` (write) |
-| Infra (target) | AWS via Terraform — CloudFront + S3, ALB → ECS Fargate, RDS, Cognito, Secrets Manager, CloudWatch; CI/CD with GitHub Actions |
+| Agent actions | Tool-calling: `search_products` / `search_documentation` (read), `add_to_cart` / `create_ticket` (write) |
+| Infra | AWS via Terraform — CloudFront + S3, ALB → ECS Fargate, RDS, Cognito, Secrets Manager, CloudWatch, and an event-driven ingestion pipeline (S3 → SQS → Lambda) |
 
 The Flask backend runs on **ECS Fargate** (not Lambda) specifically because the
 C extension is compiled during `docker build`.
@@ -47,6 +47,9 @@ C extension is compiled during `docker build`.
 ```
 data/policies/*.md → chunk by section → embed (Titan v2) → store in document_chunks (pgvector)
 ```
+
+In AWS this runs as an **event-driven pipeline**: documents land in S3, an event
+goes to SQS, and a Lambda chunks + embeds them into pgvector (see `infra/`).
 
 **Retrieval (per query)** — `backend/app/rag/retrieval.py`
 ```
@@ -152,23 +155,24 @@ the retrieval guardrail threshold (Bedrock mocked, no network call).
 shop-sage/
 ├── docker-compose.yml          # local Postgres + pgvector
 ├── data/                       # synthetic dataset (gifts / Father's Day theme)
-│   ├── products.json           #   30 products across 6 categories
-│   ├── orders.json             #   12 sample orders
+│   ├── products.json           #   30 products · orders.json (12 orders)
 │   └── policies/               #   7 policy/FAQ documents (RAG source)
 ├── backend/                    # Flask
 │   ├── app/
-│   │   ├── __init__.py         #   create_app() app factory
-│   │   ├── api/health.py       #   /health (verifies DB connectivity)
-│   │   ├── bedrock/embeddings.py  # shared Titan embedding client
-│   │   └── rag/retrieval.py    #   two-stage retrieval + guardrail
-│   ├── csim/                   # C extension (cosine similarity)
-│   │   ├── cosine.c
-│   │   └── setup.py
-│   ├── db/schema.sql           # tables + pgvector + HNSW index
-│   └── scripts/                # seed_data.py, ingest.py, benchmark.py
+│   │   ├── api/                #   health, chat, cart endpoints
+│   │   ├── agent/              #   tools + Bedrock tool-calling orchestrator
+│   │   ├── bedrock/            #   Titan embeddings + Claude generation clients
+│   │   └── rag/                #   two-stage retrieval + guardrail
+│   ├── csim/                   #   C extension (cosine similarity)
+│   ├── db/schema.sql           #   tables + pgvector + HNSW index
+│   ├── scripts/                #   seed_data.py, ingest.py, benchmark.py
+│   ├── tests/                  #   pytest suite (18 tests)
+│   └── Dockerfile              #   compiles the C extension (why Fargate)
 ├── frontend/                   # Angular: chat UI, product cards, mini-cart
-│   └── src/app/                #   app (chat), chat/cart services, markdown pipe
-└── infra/                      # Terraform (planned)
+├── infra/                      # Terraform: modules + dev env (validated + tested)
+│   ├── modules/                #   network, alb, ecs, rds, cdn, cognito, ingestion
+│   └── envs/dev/
+└── demo/                       # AWS architecture diagram + recorded demo (Playwright)
 ```
 
 ---
@@ -223,3 +227,39 @@ Quick backend check on its own: `curl localhost:5001/health` → `{"status":"ok"
 
 > Only `scripts/ingest.py` and the chat itself need AWS Bedrock. The schema, seed,
 > `/health`, and the test suite all run without AWS.
+
+---
+
+## Deploy to AWS
+
+All infrastructure lives in Terraform under `infra/` — VPC, ALB → ECS Fargate,
+RDS + pgvector, CloudFront + S3, Cognito, and the event-driven ingestion pipeline
+(S3 → SQS → Lambda). It's formatted, validated, and covered by `terraform test`;
+`apply` provisions ~55 resources. Module breakdown: [`infra/README.md`](infra/README.md).
+
+```bash
+cd infra/envs/dev
+terraform init
+terraform apply                      # provisions the stack (~55 resources)
+
+# Backend image -> ECR, then roll the ECS service
+ECR=$(terraform output -raw ecr_repository_url)
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$ECR"
+docker build -t "$ECR:latest" ../../backend && docker push "$ECR:latest"
+aws ecs update-service --cluster "$(terraform output -raw ecs_cluster_name)" \
+  --service "$(terraform output -raw ecs_service_name)" --force-new-deployment
+
+# Frontend -> S3 + CloudFront
+( cd ../../frontend && npm run build )
+aws s3 sync ../../frontend/dist/frontend/browser \
+  "s3://$(terraform output -raw frontend_bucket)" --delete
+aws cloudfront create-invalidation \
+  --distribution-id "$(terraform output -raw cloudfront_distribution_id)" --paths '/*'
+```
+
+The Lambda needs a psycopg + pgvector layer at deploy time (`module.ingestion`
+`layers` variable). After ingestion is wired, upload policy docs to the `*-docs`
+S3 bucket to trigger embedding.
+
+> This runs real, billable services (NAT, RDS, ALB, Fargate, CloudFront). Run
+> `terraform destroy` after a demo to tear everything down.
