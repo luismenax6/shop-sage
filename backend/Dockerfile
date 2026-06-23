@@ -2,9 +2,10 @@
 # why the backend runs on ECS Fargate and not Lambda.
 FROM python:3.12-slim
 
-# Build tools for the C extension + libpq for psycopg.
+# Build tools for the C extension (build-essential pulls gcc + libc headers) +
+# libpq for psycopg.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc libpq5 \
+    && apt-get install -y --no-install-recommends build-essential libpq5 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
