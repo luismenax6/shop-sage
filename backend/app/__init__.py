@@ -13,4 +13,7 @@ def create_app():
     from app.api.chat import bp as chat_bp
     app.register_blueprint(chat_bp)
 
+    from app.api.cart import bp as cart_bp
+    app.register_blueprint(cart_bp)
+
     return app

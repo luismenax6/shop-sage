@@ -1,0 +1,105 @@
+<div class="layout">
+  <div class="chat">
+    <header class="chat__header">
+      <span class="chat__logo">🛒 ShopSage</span>
+      <span class="chat__tag">AI shopping assistant</span>
+    </header>
+
+    <div class="chat__messages">
+      @if (messages().length === 0) {
+        <div class="chat__empty">
+          Ask me for a gift idea, or a question about shipping, returns, etc.
+          <br />
+          <em>e.g. "a gift for my dad who camps, under $100"</em>
+        </div>
+      }
+
+      @for (m of messages(); track $index) {
+        <div class="msg msg--{{ m.role }}">
+          @if (m.role === 'assistant') {
+            <div class="msg__bubble msg__bubble--md" [innerHTML]="m.text | markdown"></div>
+          } @else {
+            <div class="msg__bubble">{{ m.text }}</div>
+          }
+
+          @if (m.products && m.products.length > 0) {
+            <div class="cards">
+              @for (p of m.products; track p.sku) {
+                <div class="card">
+                  <img class="card__img" [src]="p.image_url" [alt]="p.name" />
+                  <div class="card__body">
+                    <div class="card__name">{{ p.name }}</div>
+                    <div class="card__meta">
+                      <span class="card__price">${{ p.price }}</span>
+                      <span class="card__stock" [class.card__stock--out]="p.stock === 0">
+                        {{ p.stock > 0 ? 'In stock' : 'Out of stock' }}
+                      </span>
+                    </div>
+                    <button class="card__add" (click)="addToCart(p.sku)" [disabled]="p.stock === 0">
+                      Add to cart
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+          @if (m.citations && m.citations.length > 0) {
+            <div class="msg__citations">
+              <span class="msg__citations-label">Sources</span>
+              @for (c of m.citations; track c.source + c.section) {
+                <span class="cite" title="similarity {{ c.similarity }}">
+                  {{ c.source }} · {{ c.section }}
+                </span>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (loading()) {
+        <div class="msg msg--assistant">
+          <div class="msg__bubble msg__bubble--typing">…</div>
+        </div>
+      }
+    </div>
+
+    <form class="chat__input" (ngSubmit)="send()">
+      <input
+        [(ngModel)]="draft"
+        name="draft"
+        placeholder="Ask for a gift, or a support question…"
+        autocomplete="off"
+        [disabled]="loading()"
+      />
+      <button type="submit" [disabled]="loading() || !draft.trim()">Send</button>
+    </form>
+  </div>
+
+  <aside class="cart">
+    <header class="cart__header">
+      🛍️ Cart
+      <span class="cart__count">{{ cartService.cart().count }}</span>
+    </header>
+
+    <div class="cart__items">
+      @if (cartService.cart().items.length === 0) {
+        <div class="cart__empty">Your cart is empty</div>
+      }
+      @for (it of cartService.cart().items; track it.sku) {
+        <div class="cart__item">
+          <img class="cart__item-img" [src]="it.image_url" [alt]="it.name" />
+          <div class="cart__item-info">
+            <div class="cart__item-name">{{ it.name }}</div>
+            <div class="cart__item-meta">{{ it.quantity }} × ${{ it.price }}</div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <footer class="cart__footer">
+      <span>Total</span>
+      <strong>${{ cartService.cart().total }}</strong>
+    </footer>
+  </aside>
+</div>

@@ -83,8 +83,30 @@ Write safety:
 curl -X POST localhost:5001/chat -H 'Content-Type: application/json' \
   -d '{"message": "gift for my dad who camps, under 100"}'
 ```
-Returns `{ answer, citations, tool_calls, history }`. The `history` round-trips
-so a multi-turn exchange (e.g. confirm-before-write) can continue.
+Returns `{ answer, citations, products, cart, tool_calls, history }`. The
+`history` round-trips so a multi-turn exchange (e.g. confirm-before-write) can
+continue.
+
+`POST /cart/add` and `GET /cart` handle deterministic cart actions (a product
+card's "Add" button) directly, bypassing the LLM — natural language goes through
+the agent, button clicks do not. Both reuse the same idempotent cart logic.
+
+## Frontend
+
+Angular 21 (standalone components + signals) in `frontend/`. A single chat view:
+
+- chat window with user/assistant bubbles and markdown rendering
+- **in-chat product cards** (image, price, stock, Add button) built from the
+  structured `products` the backend returns alongside the prose
+- **live mini-cart** kept in sync from `/chat` and `/cart/add` responses
+- **citation chips** under support answers showing the source document/section
+
+A dev proxy (`proxy.conf.json`) forwards `/chat`, `/cart`, and `/health` to the
+Flask backend on `:5001`.
+
+```bash
+cd frontend && npm install && npm start   # http://localhost:4200
+```
 
 ## C extension benchmark
 
@@ -126,8 +148,9 @@ shop-sage/
 │   │   └── setup.py
 │   ├── db/schema.sql           # tables + pgvector + HNSW index
 │   └── scripts/                # seed_data.py, ingest.py, benchmark.py
-├── infra/                      # Terraform (planned)
-└── frontend/                   # Angular (planned)
+├── frontend/                   # Angular: chat UI, product cards, mini-cart
+│   └── src/app/                #   app (chat), chat/cart services, markdown pipe
+└── infra/                      # Terraform (planned)
 ```
 
 ---
@@ -170,6 +193,6 @@ curl localhost:5001/health         # {"status":"ok","db":"up"}
 - [x] **Day 2** — SQL schema, synthetic dataset, RAG ingestion (embeddings → pgvector)
 - [x] **Day 3** — C cosine extension + benchmark, two-stage retrieval with citations + guardrail
 - [x] **Day 4** — Agent: RAG generation (Claude) + tool-calling (search/cart/ticket), `/chat` endpoint
-- [ ] **Day 5** — Angular chat UI (streaming, product cards, mini-cart, citations)
+- [x] **Day 5** — Angular chat UI: messages, in-chat product cards, live mini-cart, citations, markdown
 - [ ] **Day 6** — AWS infrastructure in Terraform
 - [ ] **Day 7** — CI/CD, polish, demo

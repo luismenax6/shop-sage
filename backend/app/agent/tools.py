@@ -46,7 +46,7 @@ def search_products(
 
     where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
     sql = (
-        f"SELECT sku, name, category, price, stock, description "
+        f"SELECT sku, name, category, price, stock, description, image_url "
         f"FROM products {where} ORDER BY price LIMIT %s"
     )
     params.append(limit)
@@ -126,6 +126,29 @@ def create_ticket(conn, user_id, subject, body, related_order=None):
         )
     conn.commit()
     return {"status": "created", "ticket_number": ticket_number}
+
+
+def get_cart(conn, user_id):
+    """Read the user's current cart. Not an agent tool — used by the API to
+    return cart state to the UI after each turn."""
+    with conn.cursor(row_factory=dict_row) as cur:
+        cur.execute(
+            """
+            SELECT p.sku, p.name, p.price, p.image_url, c.quantity
+            FROM cart_items c JOIN products p ON p.id = c.product_id
+            WHERE c.user_id = %s
+            ORDER BY c.added_at
+            """,
+            (user_id,),
+        )
+        items = cur.fetchall()
+    for it in items:
+        it["price"] = float(it["price"])
+    return {
+        "items": items,
+        "count": sum(it["quantity"] for it in items),
+        "total": round(sum(it["price"] * it["quantity"] for it in items), 2),
+    }
 
 
 def search_documentation(conn, question):

@@ -1,0 +1,17 @@
+{
+  "/chat": {
+    "target": "http://localhost:5001",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/cart": {
+    "target": "http://localhost:5001",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/health": {
+    "target": "http://localhost:5001",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

@@ -11,8 +11,20 @@ from flask import Blueprint, current_app, jsonify, request
 from pgvector.psycopg import register_vector
 
 from app.agent.orchestrator import run_agent
+from app.agent.tools import get_cart
 
 bp = Blueprint("chat", __name__)
+
+
+def _collect_products(tool_calls):
+    """Structured products from the latest search_products call, for UI cards."""
+    products = []
+    for tc in tool_calls:
+        if tc["name"] == "search_products" and tc.get("status") == "executed":
+            result = tc.get("result")
+            if isinstance(result, list):
+                products = result  # latest search wins
+    return products
 
 
 def _collect_citations(tool_calls):
@@ -46,10 +58,13 @@ def chat():
     with psycopg.connect(current_app.config["DATABASE_URL"]) as conn:
         register_vector(conn)  # needed so the RAG tool can read vector columns
         result = run_agent(conn, message, history=history, user_id=user_id, confirm=confirm)
+        cart = get_cart(conn, user_id)  # current cart state for the mini-cart UI
 
     return jsonify(
         answer=result["answer"],
         citations=_collect_citations(result["tool_calls"]),
+        products=_collect_products(result["tool_calls"]),
+        cart=cart,
         tool_calls=[{"name": t["name"], "status": t["status"]} for t in result["tool_calls"]],
         history=result["messages"],
     )
