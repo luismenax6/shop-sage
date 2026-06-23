@@ -65,6 +65,26 @@ module "ecs" {
   image_tag                 = var.image_tag
 }
 
+# Event-driven ingestion: docs land in S3 -> SQS -> Lambda embeds into pgvector.
+module "ingestion" {
+  source             = "../../modules/ingestion"
+  name_prefix        = local.name_prefix
+  vpc_id             = module.network.vpc_id
+  private_subnet_ids = module.network.private_subnet_ids
+  db_url_secret_arn  = module.rds.db_url_secret_arn
+}
+
+# Let the ingestion Lambda reach RDS (added here to keep the rds module unaware
+# of the ingestion module).
+resource "aws_security_group_rule" "rds_from_ingest_lambda" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = module.rds.rds_security_group_id
+  source_security_group_id = module.ingestion.lambda_security_group_id
+}
+
 module "cdn" {
   source      = "../../modules/cdn"
   name_prefix = local.name_prefix

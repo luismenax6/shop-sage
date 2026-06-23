@@ -25,6 +25,11 @@ output "ecs_service_name" {
   value = module.ecs.service_name
 }
 
+output "ingestion_docs_bucket" {
+  description = "Upload policy/FAQ documents here to trigger ingestion."
+  value       = module.ingestion.docs_bucket
+}
+
 output "cognito_user_pool_id" {
   value = module.cognito.user_pool_id
 }
