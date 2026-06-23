@@ -128,6 +128,18 @@ Reproduce with `python scripts/benchmark.py`.
 
 ---
 
+## Tests
+
+```bash
+cd backend && source .venv/bin/activate
+pip install -r requirements-dev.txt
+pytest                     # needs the dev DB running (docker compose up) and seeded
+```
+
+18 tests covering the C cosine extension (correctness + error cases), markdown
+chunking, catalog search filters, write-tool idempotency (cart + tickets), and
+the retrieval guardrail threshold (Bedrock mocked, no network call).
+
 ## Repository structure
 
 ```
