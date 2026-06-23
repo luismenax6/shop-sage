@@ -238,23 +238,28 @@ RDS + pgvector, CloudFront + S3, Cognito, and the event-driven ingestion pipelin
 `apply` provisions ~55 resources. Module breakdown: [`infra/README.md`](infra/README.md).
 
 ```bash
+# 1. Provision the stack
 cd infra/envs/dev
 terraform init
 terraform apply                      # provisions the stack (~55 resources)
 
-# Backend image -> ECR, then roll the ECS service
+# 2. Capture outputs while still in the Terraform dir, then go back to repo root
 ECR=$(terraform output -raw ecr_repository_url)
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$ECR"
-docker build --platform linux/amd64 -t "$ECR:latest" ../../backend && docker push "$ECR:latest"
-aws ecs update-service --cluster "$(terraform output -raw ecs_cluster_name)" \
-  --service "$(terraform output -raw ecs_service_name)" --force-new-deployment
+CLUSTER=$(terraform output -raw ecs_cluster_name)
+SERVICE=$(terraform output -raw ecs_service_name)
+BUCKET=$(terraform output -raw frontend_bucket)
+DIST=$(terraform output -raw cloudfront_distribution_id)
+cd ../../..                          # back to the repo root
 
-# Frontend -> S3 + CloudFront
-( cd ../../frontend && npm run build )
-aws s3 sync ../../frontend/dist/frontend/browser \
-  "s3://$(terraform output -raw frontend_bucket)" --delete
-aws cloudfront create-invalidation \
-  --distribution-id "$(terraform output -raw cloudfront_distribution_id)" --paths '/*'
+# 3. Backend image -> ECR, then roll the ECS service
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$ECR"
+docker build --platform linux/amd64 -t "$ECR:latest" backend && docker push "$ECR:latest"
+aws ecs update-service --cluster "$CLUSTER" --service "$SERVICE" --force-new-deployment
+
+# 4. Frontend -> S3 + CloudFront
+( cd frontend && npm install && npm run build )
+aws s3 sync frontend/dist/frontend/browser "s3://$BUCKET" --delete
+aws cloudfront create-invalidation --distribution-id "$DIST" --paths '/*'
 ```
 
 The Lambda needs a psycopg + pgvector layer at deploy time (`module.ingestion`

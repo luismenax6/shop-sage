@@ -61,16 +61,21 @@ State is local for now; for a team, switch to the S3 backend stub in
 
 ## Deploy flow (after apply)
 
+Run from `infra/envs/dev`. `--platform linux/amd64` keeps the image compatible
+with Fargate (x86_64) even when built on Apple Silicon. See the root
+[README](../README.md#deploy-to-aws) for a copy-paste version that captures the
+`terraform output` values into variables.
+
 ```bash
-# 1. Backend image -> ECR
+# 1. Backend image -> ECR (backend is three levels up from envs/dev)
 aws ecr get-login-password | docker login --username AWS --password-stdin <ecr_url>
-docker build -t <ecr_url>:latest ../../backend
+docker build --platform linux/amd64 -t <ecr_url>:latest ../../../backend
 docker push <ecr_url>:latest
 aws ecs update-service --cluster <cluster> --service <service> --force-new-deployment
 
 # 2. Frontend -> S3 + CloudFront
-cd ../../frontend && npm run build
-aws s3 sync dist/frontend/browser s3://<frontend_bucket> --delete
+( cd ../../../frontend && npm install && npm run build )
+aws s3 sync ../../../frontend/dist/frontend/browser s3://<frontend_bucket> --delete
 aws cloudfront create-invalidation --distribution-id <id> --paths '/*'
 ```
 
