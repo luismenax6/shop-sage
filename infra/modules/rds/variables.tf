@@ -27,7 +27,7 @@ variable "db_username" {
 
 variable "engine_version" {
   type    = string
-  default = "16.4"
+  default = "16.10" # RDS deprecates minor versions; bump to an available one
 }
 
 variable "instance_class" {
