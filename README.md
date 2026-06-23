@@ -245,7 +245,7 @@ terraform apply                      # provisions the stack (~55 resources)
 # Backend image -> ECR, then roll the ECS service
 ECR=$(terraform output -raw ecr_repository_url)
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$ECR"
-docker build -t "$ECR:latest" ../../backend && docker push "$ECR:latest"
+docker build --platform linux/amd64 -t "$ECR:latest" ../../backend && docker push "$ECR:latest"
 aws ecs update-service --cluster "$(terraform output -raw ecs_cluster_name)" \
   --service "$(terraform output -raw ecs_service_name)" --force-new-deployment
 
