@@ -180,26 +180,29 @@ model access (Claude + Titan embeddings) in `us-east-1`, and `psql`.
 # 1. Start Postgres + pgvector
 docker compose up -d
 
-# 2. Backend environment
+# 2. Backend: env + dependencies
 cd backend
+cp .env.example .env                 # local DATABASE_URL is preconfigured
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
 # 3. Build & install the C extension
 pip install ./csim
 
-# 4. Create the schema and load synthetic data
+# 4. Schema + synthetic data (export DATABASE_URL so psql can read it)
+export DATABASE_URL="postgresql://shopsage:shopsage_local_dev@localhost:5432/shopsage"
 psql "$DATABASE_URL" -f db/schema.sql
-python scripts/seed_data.py        # products + orders
-python scripts/ingest.py           # embeds policy docs into pgvector
+python scripts/seed_data.py          # products + orders
+python scripts/ingest.py             # embeds policy docs (needs AWS Bedrock access)
 
 # 5. Run the backend
 flask --app wsgi run --port 5001
-curl localhost:5001/health         # {"status":"ok","db":"up"}
+curl localhost:5001/health           # {"status":"ok","db":"up"}
 ```
 
-`DATABASE_URL` (local default):
-`postgresql://shopsage:shopsage_local_dev@localhost:5432/shopsage`
+The frontend (`cd frontend && npm install && npm start`) proxies to the backend
+on `:5001`. Only `scripts/ingest.py` and the chat itself need AWS Bedrock access;
+everything else (schema, seed, `/health`, tests) runs without AWS.
 
 ---
 
