@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at 30% 20%, #1f2937, #0b1220);
+        color: #e5e7eb;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.4rem;
+      }
+      h2 { font-size: 1.5rem; font-weight: 600; }
+      h2 span { color: #818cf8; }
+      .sub { color: #9ca3af; font-size: 0.9rem; margin-top: -0.6rem; }
+
+      .term {
+        width: 880px;
+        background: #0d1117;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .term__bar {
+        background: #161b22;
+        padding: 0.6rem 0.9rem;
+        display: flex;
+        gap: 0.45rem;
+        border-bottom: 1px solid #30363d;
+      }
+      .dot { width: 12px; height: 12px; border-radius: 50%; }
+      .r { background: #ff5f56; } .y { background: #ffbd2e; } .g { background: #27c93f; }
+      .term__body {
+        padding: 1.1rem 1.3rem;
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 0.86rem;
+        line-height: 1.75;
+        white-space: pre;
+      }
+      .cmd { color: #58a6ff; }
+      .muted { color: #8b949e; }
+      .ok { color: #3fb950; }
+      .hi { color: #f0b72f; font-weight: 700; }
+      .pink { color: #ff7b72; }
+    </style>
+  </head>
+  <body>
+    <h2>Behind the scenes — <span>RAG ingestion &amp; the C retriever</span></h2>
+    <div class="sub">what powers the chat you just saw</div>
+
+    <div class="term">
+      <div class="term__bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+      <div class="term__body"><span class="cmd">$ python scripts/ingest.py</span>
+  <span class="muted"># chunk policy docs → embed with Titan → store in pgvector</span>
+  returns.md: 5 chunks   shipping.md: 5 chunks   warranty.md: 4 chunks ...
+  <span class="ok">Ingestion complete: 7 documents, 36 chunks → vector(1024)</span>
+
+<span class="cmd">$ semantic search — meaning, not keywords</span>
+  Q: <span class="hi">"can I return a gift after 40 days?"</span>
+  <span class="pink">0.50</span>  gift-services.md :: Gift receipts and returns
+  <span class="pink">0.50</span>  returns.md :: Return window      <span class="muted">← says "60 days"; the word "40" isn't in any doc</span>
+
+<span class="cmd">$ python scripts/benchmark.py</span>   <span class="muted"># cosine on 20k vectors</span>
+  pure Python   1995.1 ms
+  C extension     <span class="hi">32.6 ms</span>   <span class="ok">→ 61× faster</span>
+  (NumPy vec.)    67.2 ms</div>
+    </div>
+  </body>
+</html>

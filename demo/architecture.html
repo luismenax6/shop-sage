@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at 30% 20%, #1f2937, #0b1220);
+        color: #e5e7eb;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2.2rem;
+      }
+      .title { text-align: center; }
+      .title h1 { font-size: 2.6rem; letter-spacing: -0.5px; }
+      .title h1 span { color: #818cf8; }
+      .title p { margin-top: 0.5rem; color: #9ca3af; font-size: 1.05rem; }
+
+      .diagram { display: flex; align-items: center; gap: 0.9rem; }
+      .col { display: flex; flex-direction: column; gap: 0.7rem; align-items: center; }
+      .box {
+        background: #111827;
+        border: 1px solid #374151;
+        border-radius: 12px;
+        padding: 0.8rem 1.1rem;
+        text-align: center;
+        min-width: 150px;
+      }
+      .box b { display: block; font-size: 0.95rem; }
+      .box small { color: #9ca3af; font-size: 0.72rem; }
+      .box.ai { border-color: #6366f1; box-shadow: 0 0 24px rgba(99, 102, 241, 0.25); }
+      .box.data { border-color: #10b981; }
+      .arrow { color: #6b7280; font-size: 1.6rem; }
+
+      .lane-label {
+        color: #6b7280;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: -0.6rem;
+      }
+      .diagram.ingest .box { min-width: 110px; padding: 0.55rem 0.8rem; }
+      .diagram.ingest .box b { font-size: 0.82rem; }
+      .diagram.ingest .arrow { font-size: 1.2rem; }
+
+      .stack {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 760px;
+      }
+      .chip {
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 999px;
+        padding: 0.3rem 0.8rem;
+        font-size: 0.8rem;
+        color: #cbd5e1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="title">
+      <h1>🛒 Shop<span>Sage</span></h1>
+      <p>AI shopping assistant — RAG, agent tool-calling, and a C-accelerated retriever</p>
+    </div>
+
+    <div class="diagram">
+      <div class="col">
+        <div class="box"><b>Angular</b><small>chat · cards · cart</small></div>
+        <small>CloudFront + S3</small>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <div class="box"><b>ALB → ECS Fargate</b><small>Flask agent</small></div>
+        <small>tool-calling</small>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <div class="box ai"><b>AWS Bedrock</b><small>Claude · Titan</small></div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <div class="box data"><b>Postgres + pgvector</b><small>+ C cosine (65× faster)</small></div>
+      </div>
+    </div>
+
+    <div class="lane-label">Event-driven ingestion</div>
+    <div class="diagram ingest">
+      <div class="box"><b>Admin upload</b></div>
+      <div class="arrow">→</div>
+      <div class="box"><b>S3</b><small>docs</small></div>
+      <div class="arrow">→</div>
+      <div class="box"><b>SQS</b></div>
+      <div class="arrow">→</div>
+      <div class="box ai"><b>Lambda</b><small>chunk + embed</small></div>
+      <div class="arrow">→</div>
+      <div class="box data"><b>pgvector</b></div>
+    </div>
+
+    <div class="stack">
+      <span class="chip">Angular</span>
+      <span class="chip">Flask</span>
+      <span class="chip">AWS Bedrock</span>
+      <span class="chip">pgvector</span>
+      <span class="chip">C extension</span>
+      <span class="chip">Terraform</span>
+      <span class="chip">Docker</span>
+    </div>
+  </body>
+</html>

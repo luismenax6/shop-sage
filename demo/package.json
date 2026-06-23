@@ -1,0 +1,9 @@
+{
+  "name": "shopsage-demo",
+  "private": true,
+  "type": "module",
+  "description": "Playwright script that drives the app and records a demo video.",
+  "dependencies": {
+    "playwright": "^1.61.0"
+  }
+}

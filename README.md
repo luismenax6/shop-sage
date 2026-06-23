@@ -20,6 +20,10 @@ policy documents (RAG), and takes actions on their behalf via tool-calling.
 
 ## Architecture
 
+![ShopSage architecture on AWS](demo/shopsage-architecture.png)
+
+> Diagram generated from code — `python demo/architecture_diagram.py`.
+
 | Layer | Tech |
 | --- | --- |
 | Frontend | Angular (chat UI with streaming, in-chat product cards, mini-cart, citations) |
