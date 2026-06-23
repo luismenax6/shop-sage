@@ -253,7 +253,7 @@ cd ../../..                          # back to the repo root
 
 # 3. Backend image -> ECR, then roll the ECS service
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$ECR"
-docker build --platform linux/amd64 -t "$ECR:latest" backend && docker push "$ECR:latest"
+docker build --platform linux/amd64 -t "${ECR}:latest" backend && docker push "${ECR}:latest"
 aws ecs update-service --cluster "$CLUSTER" --service "$SERVICE" --force-new-deployment
 
 # 4. Frontend -> S3 + CloudFront
