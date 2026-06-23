@@ -268,3 +268,20 @@ S3 bucket to trigger embedding.
 
 > This runs real, billable services (NAT, RDS, ALB, Fargate, CloudFront). Run
 > `terraform destroy` after a demo to tear everything down.
+
+### CI/CD (next step)
+
+The manual steps above map cleanly onto a GitHub Actions pipeline. A typical setup:
+
+- **Auth via OIDC** — a GitHub → AWS role assumed at runtime, no stored AWS keys.
+- **On pull request** — `terraform fmt -check`, `validate`, `test`, and `plan`
+  (posted as a PR comment), plus `pytest` and `npm run build` for the app.
+- **On merge to `main`** — `terraform apply`, build & push the backend image to
+  ECR (`--platform linux/amd64`), force a new ECS deployment, then `aws s3 sync`
+  the frontend and invalidate CloudFront.
+- **Remote state** — move Terraform state to the S3 backend (stubbed in
+  `infra/envs/dev/providers.tf`) with locking, so the pipeline and humans share
+  one state.
+
+It isn't wired up here (the deploy is intentionally manual), but every step is
+already a one-liner above — turning it into a workflow is mostly copy-paste.
