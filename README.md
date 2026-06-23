@@ -206,5 +206,5 @@ curl localhost:5001/health         # {"status":"ok","db":"up"}
 - [x] **Day 3** — C cosine extension + benchmark, two-stage retrieval with citations + guardrail
 - [x] **Day 4** — Agent: RAG generation (Claude) + tool-calling (search/cart/ticket), `/chat` endpoint
 - [x] **Day 5** — Angular chat UI: messages, in-chat product cards, live mini-cart, citations, markdown
-- [ ] **Day 6** — AWS infrastructure in Terraform
+- [x] **Day 6** — AWS infrastructure in Terraform (modules + dev env + `terraform test`), backend Dockerfile
 - [ ] **Day 7** — CI/CD, polish, demo

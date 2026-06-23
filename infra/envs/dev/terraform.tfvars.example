@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars and adjust. Never commit terraform.tfvars.
+region    = "us-east-1"
+image_tag = "latest"
+
+# Add your deployed frontend URL once CloudFront is up:
+# cognito_callback_urls = ["https://dxxxx.cloudfront.net", "http://localhost:4200"]

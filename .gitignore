@@ -24,12 +24,12 @@ build/
 
 # --- Terraform ---
 .terraform/
-.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 *.tfvars
 *.tfvars.json
 crash.log
+# .terraform.lock.hcl is committed on purpose (pins provider versions)
 
 # --- OS / editor ---
 .DS_Store
