@@ -8,6 +8,8 @@ policy documents (RAG), and takes actions on their behalf via tool-calling.
 > (in the spirit of Capacity.com) — **not** a full e-commerce storefront. The
 > core is the chat experience, retrieval-augmented answers, and agent actions.
 
+![ShopSage demo — chat, in-chat product cards, live cart](demo/shopsage-chat.gif)
+
 ## Example
 
 > **Shopper:** "A gift for my dad who camps, under $100."
@@ -203,15 +205,3 @@ curl localhost:5001/health           # {"status":"ok","db":"up"}
 The frontend (`cd frontend && npm install && npm start`) proxies to the backend
 on `:5001`. Only `scripts/ingest.py` and the chat itself need AWS Bedrock access;
 everything else (schema, seed, `/health`, tests) runs without AWS.
-
----
-
-## Status
-
-- [x] **Day 1** — Monorepo, Postgres + pgvector (Docker), Flask app factory + `/health`
-- [x] **Day 2** — SQL schema, synthetic dataset, RAG ingestion (embeddings → pgvector)
-- [x] **Day 3** — C cosine extension + benchmark, two-stage retrieval with citations + guardrail
-- [x] **Day 4** — Agent: RAG generation (Claude) + tool-calling (search/cart/ticket), `/chat` endpoint
-- [x] **Day 5** — Angular chat UI: messages, in-chat product cards, live mini-cart, citations, markdown
-- [x] **Day 6** — AWS infrastructure in Terraform (modules + dev env + `terraform test`), backend Dockerfile
-- [x] **Day 7** — Polish: removed dead code, single Bedrock generation client, finalized docs
