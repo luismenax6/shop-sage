@@ -1,0 +1,105 @@
+[
+  {
+    "order_number": "SS-10001",
+    "user_id": "user_demo",
+    "status": "delivered",
+    "items": [
+      { "sku": "GRIL-003", "quantity": 1 },
+      { "sku": "GRIL-005", "quantity": 2 }
+    ]
+  },
+  {
+    "order_number": "SS-10002",
+    "user_id": "user_demo",
+    "status": "shipped",
+    "items": [
+      { "sku": "TECH-002", "quantity": 1 }
+    ]
+  },
+  {
+    "order_number": "SS-10003",
+    "user_id": "user_demo",
+    "status": "processing",
+    "items": [
+      { "sku": "CAMP-001", "quantity": 1 },
+      { "sku": "CAMP-003", "quantity": 1 },
+      { "sku": "CAMP-005", "quantity": 1 }
+    ]
+  },
+  {
+    "order_number": "SS-10004",
+    "user_id": "user_demo",
+    "status": "delivered",
+    "items": [
+      { "sku": "DRNK-001", "quantity": 1 }
+    ]
+  },
+  {
+    "order_number": "SS-10005",
+    "user_id": "user_demo",
+    "status": "returned",
+    "items": [
+      { "sku": "TECH-005", "quantity": 1 }
+    ]
+  },
+  {
+    "order_number": "SS-10006",
+    "user_id": "user_demo",
+    "status": "cancelled",
+    "items": [
+      { "sku": "SPRT-001", "quantity": 2 }
+    ]
+  },
+  {
+    "order_number": "SS-10007",
+    "user_id": "user_demo",
+    "status": "delivered",
+    "items": [
+      { "sku": "TOOL-004", "quantity": 1 },
+      { "sku": "TOOL-005", "quantity": 1 }
+    ]
+  },
+  {
+    "order_number": "SS-10008",
+    "user_id": "user_anna",
+    "status": "shipped",
+    "items": [
+      { "sku": "GRIL-001", "quantity": 1 }
+    ]
+  },
+  {
+    "order_number": "SS-10009",
+    "user_id": "user_anna",
+    "status": "delivered",
+    "items": [
+      { "sku": "DRNK-004", "quantity": 1 },
+      { "sku": "DRNK-005", "quantity": 1 }
+    ]
+  },
+  {
+    "order_number": "SS-10010",
+    "user_id": "user_carlos",
+    "status": "processing",
+    "items": [
+      { "sku": "SPRT-002", "quantity": 1 }
+    ]
+  },
+  {
+    "order_number": "SS-10011",
+    "user_id": "user_carlos",
+    "status": "delivered",
+    "items": [
+      { "sku": "TOOL-001", "quantity": 1 },
+      { "sku": "TOOL-002", "quantity": 1 }
+    ]
+  },
+  {
+    "order_number": "SS-10012",
+    "user_id": "user_maria",
+    "status": "shipped",
+    "items": [
+      { "sku": "TECH-001", "quantity": 1 },
+      { "sku": "TECH-004", "quantity": 1 }
+    ]
+  }
+]

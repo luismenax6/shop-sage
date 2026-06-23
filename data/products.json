@@ -1,0 +1,272 @@
+[
+  {
+    "sku": "CAMP-001",
+    "name": "TrailLite 2-Person Backpacking Tent",
+    "category": "Camping & Outdoors",
+    "price": 89.99,
+    "stock": 24,
+    "description": "Ultralight 2-person tent weighing just 4.2 lbs, perfect for the dad who hikes to his campsite. Freestanding aluminum poles set up in under 5 minutes, the rainfly handles a downpour, and dual vestibules keep boots and packs dry. Packs down to the size of a water bottle.",
+    "image_url": "https://picsum.photos/seed/CAMP-001/400/300"
+  },
+  {
+    "sku": "CAMP-002",
+    "name": "Summit 20°F Mummy Sleeping Bag",
+    "category": "Camping & Outdoors",
+    "price": 74.5,
+    "stock": 31,
+    "description": "A cozy mummy bag rated to 20°F with water-resistant ripstop shell and a draft collar that traps heat on cold mountain nights. Compresses into the included stuff sack and clips to any pack. Great for three-season camping trips.",
+    "image_url": "https://picsum.photos/seed/CAMP-002/400/300"
+  },
+  {
+    "sku": "CAMP-003",
+    "name": "PathFinder Rechargeable Headlamp",
+    "category": "Camping & Outdoors",
+    "price": 32.0,
+    "stock": 80,
+    "description": "USB-C rechargeable headlamp pushing 500 lumens with a red night-vision mode and a motion-sensor toggle so dad can turn it on with a wave of his hand. IPX6 waterproof and runs up to 40 hours on low. A stocking-stuffer-sized gift he will actually use.",
+    "image_url": "https://picsum.photos/seed/CAMP-003/400/300"
+  },
+  {
+    "sku": "CAMP-004",
+    "name": "Basecamp Folding Camp Chair",
+    "category": "Camping & Outdoors",
+    "price": 45.0,
+    "stock": 0,
+    "description": "A rugged folding chair with a built-in cup holder, side cooler pocket, and a steel frame that supports up to 300 lbs. The padded armrests and high back make it the throne of any campsite. Folds flat into a carry bag with a shoulder strap.",
+    "image_url": "https://picsum.photos/seed/CAMP-004/400/300"
+  },
+  {
+    "sku": "CAMP-005",
+    "name": "VortexFlame Backpacking Stove",
+    "category": "Camping & Outdoors",
+    "price": 54.99,
+    "stock": 17,
+    "description": "A compact canister stove that boils a liter of water in under 4 minutes, with a piezo igniter so there are no matches to lose. Folds to fit in a mug and weighs only 3 oz. Ideal for the dad who likes hot coffee at sunrise on the trail.",
+    "image_url": "https://picsum.photos/seed/CAMP-005/400/300"
+  },
+  {
+    "sku": "GRIL-001",
+    "name": "FlavorMaster 3-Burner Gas Grill",
+    "category": "Grilling & BBQ",
+    "price": 349.0,
+    "stock": 8,
+    "description": "A stainless-steel 3-burner propane grill with 450 sq in of cooking space, porcelain-coated grates, and a side searing burner for steaks. The built-in thermometer and electronic ignition take the guesswork out of grilling. Dad's backyard upgrade.",
+    "image_url": "https://picsum.photos/seed/GRIL-001/400/300"
+  },
+  {
+    "sku": "GRIL-002",
+    "name": "PitBoss Digital Meat Thermometer",
+    "category": "Grilling & BBQ",
+    "price": 39.99,
+    "stock": 65,
+    "description": "A dual-probe wireless thermometer that sends alerts to dad's phone when the brisket hits temperature, with presets for every cut of meat. Range up to 300 feet means he can watch the game while the smoker does the work. Backlit display reads clearly at night.",
+    "image_url": "https://picsum.photos/seed/GRIL-002/400/300"
+  },
+  {
+    "sku": "GRIL-003",
+    "name": "Heritage 18-Piece BBQ Tool Set",
+    "category": "Grilling & BBQ",
+    "price": 59.95,
+    "stock": 42,
+    "description": "An 18-piece stainless grilling set in a rugged aluminum case: spatula, tongs, fork, skewers, basting brush, and corn holders. Each tool has a riveted wooden-look handle built to survive years of cookouts. Comes gift-ready in a latching presentation box.",
+    "image_url": "https://picsum.photos/seed/GRIL-003/400/300"
+  },
+  {
+    "sku": "GRIL-004",
+    "name": "SmokeRing Pellet Smoker Tube",
+    "category": "Grilling & BBQ",
+    "price": 24.99,
+    "stock": 90,
+    "description": "A 12-inch stainless smoker tube that adds up to 5 hours of cold or hot smoke to any grill using wood pellets. Perfect for the dad who wants that authentic smoke ring without buying a whole new smoker. Works for cheese, salmon, nuts, and ribs.",
+    "image_url": "https://picsum.photos/seed/GRIL-004/400/300"
+  },
+  {
+    "sku": "GRIL-005",
+    "name": "Charred & Bold Dry Rub Trio",
+    "category": "Grilling & BBQ",
+    "price": 28.0,
+    "stock": 53,
+    "description": "A gift trio of small-batch dry rubs — coffee-chili brisket, maple-bourbon pork, and smoked garlic steak — in refillable tins. No artificial junk, just bold flavor for the weekend pitmaster. A thoughtful add-on under $30.",
+    "image_url": "https://picsum.photos/seed/GRIL-005/400/300"
+  },
+  {
+    "sku": "TECH-001",
+    "name": "SoundWave Noise-Cancelling Headphones",
+    "category": "Tech & Gadgets",
+    "price": 99.99,
+    "stock": 27,
+    "description": "Over-ear wireless headphones with active noise cancellation, 30-hour battery life, and plush memory-foam earcups for all-day comfort. Bluetooth multipoint lets dad stay connected to his phone and laptop at once. Folds flat for travel.",
+    "image_url": "https://picsum.photos/seed/TECH-001/400/300"
+  },
+  {
+    "sku": "TECH-002",
+    "name": "PowerPeak 20K Portable Charger",
+    "category": "Tech & Gadgets",
+    "price": 42.99,
+    "stock": 110,
+    "description": "A 20,000mAh power bank with 65W USB-C fast charging that can top off a laptop, phone, and tablet at the same time. Slim enough for a jacket pocket, tough enough for camping. The digital readout shows exactly how much juice is left.",
+    "image_url": "https://picsum.photos/seed/TECH-002/400/300"
+  },
+  {
+    "sku": "TECH-003",
+    "name": "AeroDrone Mini 4K Camera Drone",
+    "category": "Tech & Gadgets",
+    "price": 129.0,
+    "stock": 14,
+    "description": "A foldable, palm-sized drone with a 4K stabilized camera, 25-minute flight time, and one-tap return-to-home. GPS hovering keeps shots steady even in a breeze, and the beginner mode makes it easy for first-time pilots. For the dad who loves a new gadget.",
+    "image_url": "https://picsum.photos/seed/TECH-003/400/300"
+  },
+  {
+    "sku": "TECH-004",
+    "name": "TrackTag Bluetooth Key Finder (4-Pack)",
+    "category": "Tech & Gadgets",
+    "price": 34.95,
+    "stock": 73,
+    "description": "A four-pack of coin-sized trackers so dad never loses his keys, wallet, or remote again. Ring them from your phone or use the app to see their last known location on a map. Replaceable battery lasts a full year.",
+    "image_url": "https://picsum.photos/seed/TECH-004/400/300"
+  },
+  {
+    "sku": "TECH-005",
+    "name": "RetroBeat Bluetooth Turntable",
+    "category": "Tech & Gadgets",
+    "price": 119.0,
+    "stock": 0,
+    "description": "A belt-driven vinyl turntable with built-in speakers and Bluetooth output, wrapped in a walnut-finish housing. Plays 33, 45, and 78 RPM records and streams to wireless speakers for the dad rediscovering his record collection. Anti-skip tonearm protects the grooves.",
+    "image_url": "https://picsum.photos/seed/TECH-005/400/300"
+  },
+  {
+    "sku": "TOOL-001",
+    "name": "IronGrip 20V Cordless Drill Kit",
+    "category": "Tools & DIY",
+    "price": 79.99,
+    "stock": 36,
+    "description": "A 20V brushless drill/driver kit with two batteries, a charger, and a 30-piece bit set in a hard case. 350 in-lbs of torque and a two-speed gearbox handle everything from hanging shelves to building a deck. The LED work light is a nice touch for tight spaces.",
+    "image_url": "https://picsum.photos/seed/TOOL-001/400/300"
+  },
+  {
+    "sku": "TOOL-002",
+    "name": "Craftsman 230-Piece Mechanic Set",
+    "category": "Tools & DIY",
+    "price": 94.0,
+    "stock": 21,
+    "description": "A 230-piece socket and ratchet set in SAE and metric, organized in a rugged blow-molded case. Chrome-vanadium steel and a 72-tooth ratchet make quick work of car and home repairs. A lifetime gift for the dad who fixes everything himself.",
+    "image_url": "https://picsum.photos/seed/TOOL-002/400/300"
+  },
+  {
+    "sku": "TOOL-003",
+    "name": "LaserLine Self-Leveling Level",
+    "category": "Tools & DIY",
+    "price": 49.99,
+    "stock": 48,
+    "description": "A self-leveling cross-line laser that projects bright green horizontal and vertical lines up to 50 feet, with a magnetic bracket for hands-free work. Perfect for hanging pictures, tiling, or framing. Takes the squinting and guesswork out of DIY projects.",
+    "image_url": "https://picsum.photos/seed/TOOL-003/400/300"
+  },
+  {
+    "sku": "TOOL-004",
+    "name": "EdgePro 12-in-1 Multi-Tool",
+    "category": "Tools & DIY",
+    "price": 38.5,
+    "stock": 95,
+    "description": "A pocket multi-tool packing pliers, knife, saw, screwdrivers, bottle opener, and more into a stainless-steel frame with a lifetime warranty. Spring-loaded jaws and a one-hand opening make it genuinely useful, not a drawer trinket. Belt sheath included.",
+    "image_url": "https://picsum.photos/seed/TOOL-004/400/300"
+  },
+  {
+    "sku": "TOOL-005",
+    "name": "WorkShop LED Headlamp Cap",
+    "category": "Tools & DIY",
+    "price": 19.99,
+    "stock": 130,
+    "description": "A rugged ball cap with four bright LEDs built into the brim, rechargeable by USB, so dad has hands-free light under the sink or hood. The lights tilt down where he is looking and the cap is machine washable. An affordable, genuinely handy gift.",
+    "image_url": "https://picsum.photos/seed/TOOL-005/400/300"
+  },
+  {
+    "sku": "SPRT-001",
+    "name": "FlexCore Adjustable Dumbbell (Single)",
+    "category": "Sports & Fitness",
+    "price": 99.0,
+    "stock": 19,
+    "description": "A single adjustable dumbbell that dials from 5 to 52.5 lbs, replacing 15 weights and saving a ton of garage space. The quick-turn dial swaps weight in seconds between sets. Great for the dad building a home gym one piece at a time.",
+    "image_url": "https://picsum.photos/seed/SPRT-001/400/300"
+  },
+  {
+    "sku": "SPRT-002",
+    "name": "TrailRunner GPS Sport Watch",
+    "category": "Sports & Fitness",
+    "price": 129.95,
+    "stock": 22,
+    "description": "A lightweight GPS watch tracking pace, heart rate, sleep, and 25 sport modes, with a 14-day battery life and a sunlight-readable display. Syncs to a free app for training insights. For the dad who runs, rides, or hits the gym.",
+    "image_url": "https://picsum.photos/seed/SPRT-002/400/300"
+  },
+  {
+    "sku": "SPRT-003",
+    "name": "GripStrong Hand Forearm Trainer",
+    "category": "Sports & Fitness",
+    "price": 21.99,
+    "stock": 88,
+    "description": "An adjustable grip strengthener from 22 to 88 lbs of resistance, with a non-slip handle for building forearm and hand strength. Quiet enough to use at a desk or in front of the TV. A small, practical gift for active dads.",
+    "image_url": "https://picsum.photos/seed/SPRT-003/400/300"
+  },
+  {
+    "sku": "SPRT-004",
+    "name": "AquaFlow Insulated Sports Bottle",
+    "category": "Sports & Fitness",
+    "price": 26.0,
+    "stock": 140,
+    "description": "A 32 oz double-wall stainless bottle that keeps drinks cold for 24 hours or hot for 12, with a leakproof flip-straw lid. Fits standard cup holders and survives drops on the trail or the gym floor. Laser-engraving available for a personal touch.",
+    "image_url": "https://picsum.photos/seed/SPRT-004/400/300"
+  },
+  {
+    "sku": "SPRT-005",
+    "name": "ProSwing Weighted Training Golf Club",
+    "category": "Sports & Fitness",
+    "price": 64.99,
+    "stock": 0,
+    "description": "A weighted warm-up club that builds a smoother, more powerful golf swing and loosens up dad before a round. The flexible shaft trains tempo and the heavier head builds the right muscles. A favorite gift for the weekend golfer.",
+    "image_url": "https://picsum.photos/seed/SPRT-005/400/300"
+  },
+  {
+    "sku": "DRNK-001",
+    "name": "Glacier Whiskey Stones & Glass Set",
+    "category": "Drinks & Barware",
+    "price": 36.99,
+    "stock": 60,
+    "description": "A gift set with two crystal-clear whiskey glasses and nine reusable granite chilling stones that cool a drink without watering it down. Packaged in a handsome wooden box with velvet lining and tongs. A classy, no-batteries-required gift for dad.",
+    "image_url": "https://picsum.photos/seed/DRNK-001/400/300"
+  },
+  {
+    "sku": "DRNK-002",
+    "name": "BrewMaster Craft Beer Making Kit",
+    "category": "Drinks & Barware",
+    "price": 49.0,
+    "stock": 33,
+    "description": "A complete one-gallon home brewing kit with everything dad needs for his first batch of IPA — fermenter, ingredients, airlock, and step-by-step guide. Makes about ten bottles of fresh craft beer. A fun, hands-on hobby gift.",
+    "image_url": "https://picsum.photos/seed/DRNK-002/400/300"
+  },
+  {
+    "sku": "DRNK-003",
+    "name": "Everyday Pour-Over Coffee Kit",
+    "category": "Drinks & Barware",
+    "price": 44.5,
+    "stock": 47,
+    "description": "A ceramic pour-over dripper, gooseneck kettle, and reusable stainless filter for the dad who takes his morning coffee seriously. Brews a clean, bright cup with no paper waste. Comes with a card of brewing tips for dialing in the perfect ratio.",
+    "image_url": "https://picsum.photos/seed/DRNK-003/400/300"
+  },
+  {
+    "sku": "DRNK-004",
+    "name": "Old Fashioned Cocktail Smoker Kit",
+    "category": "Drinks & Barware",
+    "price": 39.99,
+    "stock": 41,
+    "description": "A cocktail smoker with four wood chip flavors that adds a dramatic smoky aroma to whiskey and bourbon drinks. No torch guesswork — the set includes everything but the lighter. Turns dad's home bar into a speakeasy.",
+    "image_url": "https://picsum.photos/seed/DRNK-004/400/300"
+  },
+  {
+    "sku": "DRNK-005",
+    "name": "Heritage Leather Hip Flask Set",
+    "category": "Drinks & Barware",
+    "price": 29.99,
+    "stock": 70,
+    "description": "An 8 oz stainless flask wrapped in genuine brown leather, with a funnel and two shot cups in a gift box. Slim enough for a jacket pocket on the boat or at the game. A timeless, affordable gift that can be monogrammed.",
+    "image_url": "https://picsum.photos/seed/DRNK-005/400/300"
+  }
+]
