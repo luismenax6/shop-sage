@@ -173,35 +173,53 @@ shop-sage/
 
 ---
 
-## Local setup
+## Run it locally (end to end)
 
-Prerequisites: Docker, Python 3.11+, a C compiler, AWS credentials with Bedrock
-model access (Claude + Titan embeddings) in `us-east-1`, and `psql`.
+Prerequisites: Docker, Node 20+, Python 3.11+, a C compiler, `psql`, and AWS
+credentials with Bedrock model access (Claude + Titan embeddings) in `us-east-1`.
+
+### 1. One-time setup
 
 ```bash
-# 1. Start Postgres + pgvector
-docker compose up -d
+# Database
+docker compose up -d                 # Postgres + pgvector
 
-# 2. Backend: env + dependencies
+# Backend: env, dependencies, C extension
 cd backend
 cp .env.example .env                 # local DATABASE_URL is preconfigured
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+pip install ./csim                   # builds & installs the C extension
 
-# 3. Build & install the C extension
-pip install ./csim
-
-# 4. Schema + synthetic data (export DATABASE_URL so psql can read it)
+# Schema + synthetic data (export DATABASE_URL so psql can read it)
 export DATABASE_URL="postgresql://shopsage:shopsage_local_dev@localhost:5432/shopsage"
 psql "$DATABASE_URL" -f db/schema.sql
 python scripts/seed_data.py          # products + orders
-python scripts/ingest.py             # embeds policy docs (needs AWS Bedrock access)
+python scripts/ingest.py             # embeds policy docs into pgvector (needs AWS Bedrock)
 
-# 5. Run the backend
-flask --app wsgi run --port 5001
-curl localhost:5001/health           # {"status":"ok","db":"up"}
+# Frontend dependencies
+cd ../frontend && npm install
 ```
 
-The frontend (`cd frontend && npm install && npm start`) proxies to the backend
-on `:5001`. Only `scripts/ingest.py` and the chat itself need AWS Bedrock access;
-everything else (schema, seed, `/health`, tests) runs without AWS.
+### 2. Start the app
+
+Two terminals (the database keeps running in the background from setup):
+
+```bash
+# Terminal 1 — backend (from backend/, with the venv active)
+flask --app wsgi run --port 5001
+
+# Terminal 2 — frontend (from frontend/)
+npm start                            # ng serve on :4200, proxies /chat + /cart to :5001
+```
+
+Then open **http://localhost:4200** and try:
+
+- *"a gift for my dad who camps, under $100"* → product cards; click **Add to cart**
+- *"can I return a Father's Day gift after 45 days?"* → answer with citations
+- *"do you have a store in Madrid?"* → guardrail (says it doesn't know, no hallucination)
+
+Quick backend check on its own: `curl localhost:5001/health` → `{"status":"ok","db":"up"}`.
+
+> Only `scripts/ingest.py` and the chat itself need AWS Bedrock. The schema, seed,
+> `/health`, and the test suite all run without AWS.
