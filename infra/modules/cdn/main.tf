@@ -1,3 +1,12 @@
+# AWS-managed policies for the API behaviors (no caching, forward everything).
+data "aws_cloudfront_cache_policy" "disabled" {
+  name = "Managed-CachingDisabled"
+}
+
+data "aws_cloudfront_origin_request_policy" "all_viewer" {
+  name = "Managed-AllViewerExceptHostHeader"
+}
+
 resource "aws_s3_bucket" "site" {
   bucket = "${var.name_prefix}-frontend"
   tags   = { Name = "${var.name_prefix}-frontend" }
@@ -30,6 +39,18 @@ resource "aws_cloudfront_distribution" "site" {
     origin_access_control_id = aws_cloudfront_origin_access_control.site.id
   }
 
+  # Backend (ALB) origin for API paths.
+  origin {
+    domain_name = var.alb_domain_name
+    origin_id   = "alb-backend"
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "http-only" # the ALB listens on HTTP :80
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
   default_cache_behavior {
     target_origin_id       = "s3-frontend"
     viewer_protocol_policy = "redirect-to-https"
@@ -42,6 +63,20 @@ resource "aws_cloudfront_distribution" "site" {
       cookies {
         forward = "none"
       }
+    }
+  }
+
+  # API paths -> ALB backend (no caching, forward everything).
+  dynamic "ordered_cache_behavior" {
+    for_each = toset(["/chat*", "/cart*"])
+    content {
+      path_pattern             = ordered_cache_behavior.value
+      target_origin_id         = "alb-backend"
+      viewer_protocol_policy   = "https-only"
+      allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+      cached_methods           = ["GET", "HEAD"]
+      cache_policy_id          = data.aws_cloudfront_cache_policy.disabled.id
+      origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer.id
     }
   }
 

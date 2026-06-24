@@ -86,8 +86,9 @@ resource "aws_security_group_rule" "rds_from_ingest_lambda" {
 }
 
 module "cdn" {
-  source      = "../../modules/cdn"
-  name_prefix = local.name_prefix
+  source          = "../../modules/cdn"
+  name_prefix     = local.name_prefix
+  alb_domain_name = module.alb.alb_dns_name
 }
 
 module "cognito" {
