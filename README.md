@@ -313,6 +313,17 @@ leaves everything ready — data and future uploads.
 > `terraform apply` runs `pip` to build the layer, so it needs **python3 + pip**
 > on the machine (same as the rest of the backend tooling).
 
+### Try the live ingestion
+
+Drop a markdown doc in the docs bucket; the Lambda chunks + embeds it, and the
+chat can answer about it moments later — with a citation to the new file:
+
+```bash
+BUCKET=$(terraform -chdir=infra/envs/dev output -raw ingestion_docs_bucket)
+aws s3 cp my-policy.md "s3://$BUCKET/"
+# ~30s later, ask the assistant about its contents; the reply cites my-policy.md.
+```
+
 > This runs real, billable services (NAT, RDS, ALB, Fargate, CloudFront). Run
 > `terraform destroy` after a demo to tear everything down.
 
