@@ -256,9 +256,11 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 docker build --platform linux/amd64 -t "${ECR}:latest" backend && docker push "${ECR}:latest"
 aws ecs update-service --cluster "$CLUSTER" --service "$SERVICE" --force-new-deployment
 
-# 4. Frontend -> S3 + CloudFront
-( cd frontend && npm install && npm run build )
-aws s3 sync frontend/dist/frontend/browser "s3://$BUCKET" --delete
+# 4. Frontend -> S3 + CloudFront (build and upload from inside frontend/)
+cd frontend
+npm install && npm run build
+aws s3 sync dist/frontend/browser "s3://$BUCKET" --delete
+cd ..
 aws cloudfront create-invalidation --distribution-id "$DIST" --paths '/*'
 ```
 
