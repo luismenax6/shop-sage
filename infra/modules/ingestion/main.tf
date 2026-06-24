@@ -2,6 +2,7 @@ terraform {
   required_providers {
     aws     = { source = "hashicorp/aws" }
     archive = { source = "hashicorp/archive" }
+    null    = { source = "hashicorp/null" }
   }
 }
 
@@ -10,6 +11,39 @@ data "archive_file" "lambda" {
   type        = "zip"
   source_dir  = "${path.module}/lambda"
   output_path = "${path.module}/build/ingestion.zip"
+}
+
+# --- Build the dependency layer (psycopg + pgvector) for the Lambda runtime ---
+# No Docker: pip downloads the manylinux x86_64 wheels directly. Requires python3
+# + pip on the machine running `terraform apply`.
+resource "null_resource" "layer" {
+  triggers = {
+    requirements = filemd5("${path.module}/layer/requirements.txt")
+  }
+  provisioner "local-exec" {
+    command = <<-EOT
+      rm -rf "${path.module}/layer/python"
+      python3 -m pip install \
+        --platform manylinux2014_x86_64 \
+        --target "${path.module}/layer/python" \
+        --implementation cp --python-version 3.12 --only-binary=:all: \
+        -r "${path.module}/layer/requirements.txt"
+    EOT
+  }
+}
+
+data "archive_file" "layer" {
+  type        = "zip"
+  source_dir  = "${path.module}/layer"
+  output_path = "${path.module}/build/layer.zip"
+  depends_on  = [null_resource.layer]
+}
+
+resource "aws_lambda_layer_version" "deps" {
+  layer_name          = "${var.name_prefix}-psycopg-pgvector"
+  filename            = data.archive_file.layer.output_path
+  source_code_hash    = data.archive_file.layer.output_base64sha256
+  compatible_runtimes = ["python3.12"]
 }
 
 # --- Documents bucket (admin uploads policies/FAQs here) ---
@@ -147,7 +181,7 @@ resource "aws_lambda_function" "ingest" {
   memory_size      = 512
   filename         = data.archive_file.lambda.output_path
   source_code_hash = data.archive_file.lambda.output_base64sha256
-  layers           = var.layers # must provide psycopg + pgvector
+  layers           = concat([aws_lambda_layer_version.deps.arn], var.layers)
 
   vpc_config {
     subnet_ids         = var.private_subnet_ids

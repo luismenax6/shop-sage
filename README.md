@@ -304,10 +304,14 @@ cd ..
 aws cloudfront create-invalidation --distribution-id "$DIST" --paths '/*'
 ```
 
-Step 3b loads the **initial** data. For **ongoing** document ingestion, the
-event-driven Lambda (`module.ingestion`) needs a psycopg + pgvector layer (its
-`layers` variable); once that's wired, dropping a doc in the `*-docs` S3 bucket
-re-embeds it automatically.
+Step 3b loads the **initial** data. Ongoing document ingestion is automatic: the
+event-driven Lambda (`module.ingestion`) is attached to a psycopg + pgvector
+layer that `terraform apply` builds for you (via `pip`, no Docker), so dropping a
+doc in the `*-docs` S3 bucket re-embeds it. So a single `apply` + the steps above
+leaves everything ready — data and future uploads.
+
+> `terraform apply` runs `pip` to build the layer, so it needs **python3 + pip**
+> on the machine (same as the rest of the backend tooling).
 
 > This runs real, billable services (NAT, RDS, ALB, Fargate, CloudFront). Run
 > `terraform destroy` after a demo to tear everything down.

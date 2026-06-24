@@ -30,6 +30,8 @@ build/
 *.tfvars.json
 crash.log
 # .terraform.lock.hcl is committed on purpose (pins provider versions)
+# generated Lambda layer contents (built by terraform apply)
+infra/modules/ingestion/layer/python/
 
 # --- OS / editor ---
 .DS_Store

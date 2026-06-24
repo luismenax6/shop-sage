@@ -14,6 +14,10 @@ terraform {
       source  = "hashicorp/archive"
       version = "~> 2.0"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 3.0"
+    }
   }
 
   # State is local for now. For a team, switch to an S3 backend + DynamoDB lock.

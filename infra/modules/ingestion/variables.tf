@@ -18,7 +18,7 @@ variable "db_url_secret_arn" {
 variable "layers" {
   type        = list(string)
   default     = []
-  description = "Lambda layer ARNs providing psycopg + pgvector at runtime."
+  description = "Extra Lambda layer ARNs. The psycopg + pgvector layer is built and attached automatically."
 }
 
 variable "lambda_timeout" {
