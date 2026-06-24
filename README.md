@@ -276,12 +276,25 @@ CLUSTER=$(terraform output -raw ecs_cluster_name)
 SERVICE=$(terraform output -raw ecs_service_name)
 BUCKET=$(terraform output -raw frontend_bucket)
 DIST=$(terraform output -raw cloudfront_distribution_id)
+TASKDEF=$(terraform output -raw ecs_task_definition_arn)
+SG=$(terraform output -raw ecs_security_group_id)
+SUBNETS=$(terraform output -json private_subnet_ids | tr -d '[]" ')
 cd ../../..                          # back to the repo root
 
-# 3. Backend image -> ECR, then roll the ECS service
+# 3. Backend image -> ECR (built from the repo root so it bundles the dataset),
+#    then roll the ECS service
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$ECR"
-docker build --platform linux/amd64 -t "${ECR}:latest" backend && docker push "${ECR}:latest"
+docker build --platform linux/amd64 -f backend/Dockerfile -t "${ECR}:latest" . && docker push "${ECR}:latest"
 aws ecs update-service --cluster "$CLUSTER" --service "$SERVICE" --force-new-deployment
+
+# 3b. Seed the database in-VPC (schema + catalog/orders + policy embeddings).
+#     One-off ECS task in the private subnets — RDS is never exposed publicly.
+aws ecs run-task --cluster "$CLUSTER" --task-definition "$TASKDEF" --launch-type FARGATE \
+  --network-configuration "awsvpcConfiguration={subnets=[$SUBNETS],securityGroups=[$SG],assignPublicIp=DISABLED}" \
+  --overrides '{"containerOverrides":[{"name":"backend","command":["python","scripts/bootstrap_db.py"]}]}' \
+  --region us-east-1
+# Watch it in the ECS console (or `aws ecs list-tasks ... --desired-status STOPPED`)
+# until it finishes; the CloudWatch logs show "bootstrap complete".
 
 # 4. Frontend -> S3 + CloudFront (build and upload from inside frontend/)
 cd frontend
@@ -291,9 +304,10 @@ cd ..
 aws cloudfront create-invalidation --distribution-id "$DIST" --paths '/*'
 ```
 
-The Lambda needs a psycopg + pgvector layer at deploy time (`module.ingestion`
-`layers` variable). After ingestion is wired, upload policy docs to the `*-docs`
-S3 bucket to trigger embedding.
+Step 3b loads the **initial** data. For **ongoing** document ingestion, the
+event-driven Lambda (`module.ingestion`) needs a psycopg + pgvector layer (its
+`layers` variable); once that's wired, dropping a doc in the `*-docs` S3 bucket
+re-embeds it automatically.
 
 > This runs real, billable services (NAT, RDS, ALB, Fargate, CloudFront). Run
 > `terraform destroy` after a demo to tear everything down.

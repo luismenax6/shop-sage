@@ -1,0 +1,14 @@
+# Build context is the repo root; keep it to backend/ + data/.
+.git
+.claude
+frontend
+infra
+demo
+**/.venv
+**/node_modules
+**/__pycache__
+**/*.pyc
+**/*.so
+**/build
+**/.pytest_cache
+linkedin-post.md

@@ -30,6 +30,21 @@ output "ecs_service_name" {
   value = module.ecs.service_name
 }
 
+output "ecs_task_definition_arn" {
+  description = "Task definition for the one-off DB bootstrap task."
+  value       = module.ecs.task_definition_arn
+}
+
+output "ecs_security_group_id" {
+  description = "Service SG (can reach RDS) — used by the one-off bootstrap task."
+  value       = aws_security_group.ecs_service.id
+}
+
+output "private_subnet_ids" {
+  description = "Private subnets for the one-off bootstrap task."
+  value       = module.network.private_subnet_ids
+}
+
 output "ingestion_docs_bucket" {
   description = "Upload policy/FAQ documents here to trigger ingestion."
   value       = module.ingestion.docs_bucket
