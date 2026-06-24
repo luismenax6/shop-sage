@@ -44,8 +44,11 @@ Notable choices:
   execution role only reads the one DB secret. No account IDs or ARNs hardcoded.
 - **Event-driven ingestion** runs on Lambda (no C extension needed there): an S3
   `ObjectCreated` event goes to SQS, and the Lambda chunks + embeds into pgvector,
-  with a DLQ for failures. The Lambda needs a psycopg + pgvector layer
-  (`module.ingestion` `layers` variable).
+  with a DLQ for failures. Its psycopg + pgvector layer is built and attached
+  automatically by `terraform apply` (via `pip`, no Docker).
+- **One-off DB bootstrap**: a single ECS task (`scripts/bootstrap_db.py`) applies
+  the schema and loads the seed + embeddings inside the VPC, so RDS is never
+  exposed publicly.
 
 ## Usage
 
