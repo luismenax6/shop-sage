@@ -67,6 +67,9 @@ resource "aws_db_instance" "this" {
 resource "aws_secretsmanager_secret" "db_url" {
   name        = "${var.name_prefix}-database-url"
   description = "DATABASE_URL for the shop-sage backend"
+  # Delete immediately on destroy (dev/demo) so re-applying doesn't hit a
+  # name still scheduled for deletion.
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "db_url" {
