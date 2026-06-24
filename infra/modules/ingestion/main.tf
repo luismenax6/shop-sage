@@ -48,8 +48,9 @@ resource "aws_lambda_layer_version" "deps" {
 
 # --- Documents bucket (admin uploads policies/FAQs here) ---
 resource "aws_s3_bucket" "docs" {
-  bucket = "${var.name_prefix}-docs"
-  tags   = { Name = "${var.name_prefix}-docs" }
+  bucket        = "${var.name_prefix}-docs"
+  force_destroy = true # empty on destroy (holds uploaded policy docs)
+  tags          = { Name = "${var.name_prefix}-docs" }
 }
 
 resource "aws_s3_bucket_public_access_block" "docs" {
