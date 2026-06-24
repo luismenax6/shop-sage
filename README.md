@@ -64,6 +64,33 @@ clears the similarity threshold, instead of letting the model invent an answer.
 Each chunk keeps its source document and section, so support answers can be
 **cited**.
 
+### Managed alternative: Bedrock Knowledge Bases + S3 Vectors
+
+This project implements the document RAG by hand (chunking, embeddings, pgvector,
+a two-stage retriever, and the guardrail) to show the mechanics end to end. The
+same capability can be delivered fully managed with **Amazon Bedrock Knowledge
+Bases** backed by **S3 Vectors** (a native S3 vector store, GA): point a knowledge
+base at an S3 prefix and Bedrock chunks, embeds, stores, and serves retrieval via
+the `Retrieve` / `RetrieveAndGenerate` APIs — no ingestion Lambda, no pgvector, no
+custom retrieval code. S3 Vectors is markedly cheaper than OpenSearch for large
+vector sets.
+
+Trade-off — when to pick which:
+
+| | This project (self-managed) | Bedrock KB + S3 Vectors (managed) |
+| --- | --- | --- |
+| Control over chunking, citations, re-ranking | full (incl. the C re-ranker) | limited to KB options |
+| Ops / code to maintain | more | almost none |
+| Time to market | slower | fast |
+| Relational data (catalog, cart, orders) | same Postgres | still needs a DB (RDS / DynamoDB) |
+
+S3 Vectors only covers the document/RAG side; the structured catalog/cart search
+stays in a relational store either way. The managed route is the better default
+when you want speed and low ops; the self-managed route (here) is worth it when
+you need control over retrieval and want to optimise the hot path (e.g. the C
+extension). Refs: [S3 Vectors + Bedrock KB](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-bedrock-kb.html),
+[cost-effective RAG with KB + S3 Vectors](https://aws.amazon.com/blogs/machine-learning/building-cost-effective-rag-applications-with-amazon-bedrock-knowledge-bases-and-amazon-s3-vectors/).
+
 ---
 
 ## The agent
